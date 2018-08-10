@@ -1,6 +1,8 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Views
 {
     using System;
+
+    using Terminal.Gui.Types;
 
     /// <summary>
     ///     Radio group shows a group of labels, only one of those can be selected at a given time
@@ -14,7 +16,7 @@
         public Action<int> SelectionChanged;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.RadioGroup" /> class
+        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Views.RadioGroup" /> class
         ///     setting up the initial set of radio labels and the item that should be selected and uses
         ///     an absolute layout for the result.
         /// </summary>
@@ -29,7 +31,7 @@
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.RadioGroup" /> class
+        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Views.RadioGroup" /> class
         ///     setting up the initial set of radio labels and the item that should be selected.
         /// </summary>
         /// <param name="radioLabels">Radio labels, the strings can contain hotkeys using an undermine before the letter.</param>
@@ -46,7 +48,7 @@
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.RadioGroup" /> class
+        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Views.RadioGroup" /> class
         ///     setting up the initial set of radio labels and the item that should be selected,
         ///     the view frame is computed from the provided radioLabels.
         /// </summary>

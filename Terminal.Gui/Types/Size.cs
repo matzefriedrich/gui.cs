@@ -8,7 +8,7 @@
 // Copyright (C) 2004 Novell, Inc. http://www.novell.com
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Types
 {
     /// <summary>
     ///     Stores an ordered pair of integers, which specify a Height and Width.

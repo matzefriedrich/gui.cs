@@ -1,4 +1,4 @@
-namespace Mono.Terminal
+namespace Terminal.Gui.MonoCurses
 {
     using System;
     using System.Threading;

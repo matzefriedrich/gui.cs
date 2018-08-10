@@ -5,12 +5,16 @@
 //   Miguel de Icaza (miguel@gnome.org)
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Dialogs
 {
     using System;
     using System.Collections.Generic;
 
     using NStack;
+
+    using Terminal.Gui.Drivers;
+    using Terminal.Gui.Types;
+    using Terminal.Gui.Views;
 
     /// <summary>
     ///     The dialog box is a window that by default is centered and contains one
@@ -23,7 +27,7 @@ namespace Terminal.Gui
         private readonly List<Button> buttons = new List<Button>();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Dialog" /> class with an optional set of buttons to
+        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Dialogs.Dialog" /> class with an optional set of buttons to
         ///     display
         /// </summary>
         /// <param name="title">Title for the dialog.</param>

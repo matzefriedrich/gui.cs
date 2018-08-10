@@ -1,4 +1,4 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Views
 {
     /// <summary>
     ///     Implement this interface to provide your own custom rendering for a list.

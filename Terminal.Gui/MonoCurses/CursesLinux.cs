@@ -35,7 +35,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Unix.Terminal
+namespace Terminal.Gui.MonoCurses
 {
     using System;
     using System.Runtime.InteropServices;

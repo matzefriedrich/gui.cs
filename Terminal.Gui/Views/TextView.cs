@@ -23,7 +23,7 @@
 //   Move all the text manipulation into the TextModel
 
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Views
 {
     using System;
     using System.Collections.Generic;
@@ -31,6 +31,8 @@ namespace Terminal.Gui
     using System.Linq;
 
     using NStack;
+
+    using Terminal.Gui.Types;
 
     /// <summary>
     ///     Multi-line text editing view

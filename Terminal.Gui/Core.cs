@@ -21,9 +21,13 @@ namespace Terminal.Gui
     using System.Linq;
     using System.Threading;
 
-    using Mono.Terminal;
-
     using NStack;
+
+    using Terminal.Gui.Drivers;
+    using Terminal.Gui.MonoCurses;
+    using Terminal.Gui.Types;
+
+    using Attribute = Terminal.Gui.Drivers.Attribute;
 
     /// <summary>
     ///     Determines the LayoutStyle for a view, if Absolute, during LayoutSubviews, the

@@ -5,7 +5,7 @@
 //   Miguel de Icaza (miguel@gnome.org)
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Types
 {
     using System;
 
@@ -109,24 +109,24 @@ namespace Terminal.Gui
         }
 
         /// <summary>
-        ///     Adds a <see cref="Terminal.Gui.Pos" /> to a <see cref="Terminal.Gui.Pos" />, yielding a new
-        ///     <see cref="T:Terminal.Gui.Pos" />.
+        ///     Adds a <see cref="Pos" /> to a <see cref="Pos" />, yielding a new
+        ///     <see cref="T:Terminal.Gui.Types.Pos" />.
         /// </summary>
-        /// <param name="left">The first <see cref="Terminal.Gui.Pos" /> to add.</param>
-        /// <param name="right">The second <see cref="Terminal.Gui.Pos" /> to add.</param>
-        /// <returns>The <see cref="T:Terminal.Gui.Pos" /> that is the sum of the values of <c>left</c> and <c>right</c>.</returns>
+        /// <param name="left">The first <see cref="Pos" /> to add.</param>
+        /// <param name="right">The second <see cref="Pos" /> to add.</param>
+        /// <returns>The <see cref="T:Terminal.Gui.Types.Pos" /> that is the sum of the values of <c>left</c> and <c>right</c>.</returns>
         public static Pos operator +(Pos left, Pos right)
         {
             return new PosCombine(true, left, right);
         }
 
         /// <summary>
-        ///     Subtracts a <see cref="Terminal.Gui.Pos" /> from a <see cref="Terminal.Gui.Pos" />, yielding a new
-        ///     <see cref="T:Terminal.Gui.Pos" />.
+        ///     Subtracts a <see cref="Pos" /> from a <see cref="Pos" />, yielding a new
+        ///     <see cref="T:Terminal.Gui.Types.Pos" />.
         /// </summary>
-        /// <param name="left">The <see cref="Terminal.Gui.Pos" /> to subtract from (the minuend).</param>
-        /// <param name="right">The <see cref="Terminal.Gui.Pos" /> to subtract (the subtrahend).</param>
-        /// <returns>The <see cref="T:Terminal.Gui.Pos" /> that is the <c>left</c> minus <c>right</c>.</returns>
+        /// <param name="left">The <see cref="Pos" /> to subtract from (the minuend).</param>
+        /// <param name="right">The <see cref="Pos" /> to subtract (the subtrahend).</param>
+        /// <returns>The <see cref="T:Terminal.Gui.Types.Pos" /> that is the <c>left</c> minus <c>right</c>.</returns>
         public static Pos operator -(Pos left, Pos right)
         {
             return new PosCombine(false, left, right);
@@ -390,24 +390,24 @@ namespace Terminal.Gui
         }
 
         /// <summary>
-        ///     Adds a <see cref="Terminal.Gui.Pos" /> to a <see cref="Terminal.Gui.Pos" />, yielding a new
-        ///     <see cref="T:Terminal.Gui.Pos" />.
+        ///     Adds a <see cref="Pos" /> to a <see cref="Pos" />, yielding a new
+        ///     <see cref="T:Terminal.Gui.Types.Pos" />.
         /// </summary>
-        /// <param name="left">The first <see cref="Terminal.Gui.Pos" /> to add.</param>
-        /// <param name="right">The second <see cref="Terminal.Gui.Pos" /> to add.</param>
-        /// <returns>The <see cref="T:Terminal.Gui.Pos" /> that is the sum of the values of <c>left</c> and <c>right</c>.</returns>
+        /// <param name="left">The first <see cref="Pos" /> to add.</param>
+        /// <param name="right">The second <see cref="Pos" /> to add.</param>
+        /// <returns>The <see cref="T:Terminal.Gui.Types.Pos" /> that is the sum of the values of <c>left</c> and <c>right</c>.</returns>
         public static Dim operator +(Dim left, Dim right)
         {
             return new DimCombine(true, left, right);
         }
 
         /// <summary>
-        ///     Subtracts a <see cref="Terminal.Gui.Pos" /> from a <see cref="Terminal.Gui.Pos" />, yielding a new
-        ///     <see cref="T:Terminal.Gui.Pos" />.
+        ///     Subtracts a <see cref="Pos" /> from a <see cref="Pos" />, yielding a new
+        ///     <see cref="T:Terminal.Gui.Types.Pos" />.
         /// </summary>
-        /// <param name="left">The <see cref="Terminal.Gui.Pos" /> to subtract from (the minuend).</param>
-        /// <param name="right">The <see cref="Terminal.Gui.Pos" /> to subtract (the subtrahend).</param>
-        /// <returns>The <see cref="T:Terminal.Gui.Pos" /> that is the <c>left</c> minus <c>right</c>.</returns>
+        /// <param name="left">The <see cref="Pos" /> to subtract from (the minuend).</param>
+        /// <param name="right">The <see cref="Pos" /> to subtract (the subtrahend).</param>
+        /// <returns>The <see cref="T:Terminal.Gui.Types.Pos" /> that is the <c>left</c> minus <c>right</c>.</returns>
         public static Dim operator -(Dim left, Dim right)
         {
             return new DimCombine(false, left, right);

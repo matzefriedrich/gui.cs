@@ -1,4 +1,4 @@
-namespace Terminal.Gui
+namespace Terminal.Gui.Drivers
 {
     /// <summary>
     ///     The default ColorSchemes for the application.

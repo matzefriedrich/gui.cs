@@ -1,4 +1,4 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Dialogs
 {
     using System.Collections.Generic;
 
@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.OpenDialog" /> can choose files.
+        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Dialogs.OpenDialog" /> can choose files.
         /// </summary>
         /// <value><c>true</c> if can choose files; otherwise, <c>false</c>.  Defaults to <c>true</c></value>
         public bool CanChooseFiles
@@ -43,7 +43,7 @@
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.OpenDialog" /> can choose directories.
+        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Dialogs.OpenDialog" /> can choose directories.
         /// </summary>
         /// <value><c>true</c> if can choose directories; otherwise, <c>false</c> defaults to <c>false</c>.</value>
         public bool CanChooseDirectories
@@ -57,7 +57,7 @@
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.OpenDialog" /> allows multiple selection.
+        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Dialogs.OpenDialog" /> allows multiple selection.
         /// </summary>
         /// <value><c>true</c> if allows multiple selection; otherwise, <c>false</c>, defaults to false.</value>
         public bool AllowsMultipleSelection

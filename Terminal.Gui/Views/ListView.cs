@@ -18,12 +18,17 @@
 //   - Should a function be specified that retrieves the individual elements?   
 // 
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Views
 {
     using System;
     using System.Collections;
 
     using NStack;
+
+    using Terminal.Gui.Drivers;
+    using Terminal.Gui.Types;
+
+    using Attribute = Terminal.Gui.Drivers.Attribute;
 
     /// <summary>
     ///     ListView widget renders a list of data.
@@ -89,7 +94,7 @@ namespace Terminal.Gui
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.ListView" /> class.   You must set the Source property
+        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Views.ListView" /> class.   You must set the Source property
         ///     for this to show something.
         /// </summary>
         public ListView()
@@ -143,7 +148,7 @@ namespace Terminal.Gui
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.ListView" /> allows items to be marked.
+        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Views.ListView" /> allows items to be marked.
         /// </summary>
         /// <value><c>true</c> if allows marking elements of the list; otherwise, <c>false</c>.</value>
         public bool AllowsMarking

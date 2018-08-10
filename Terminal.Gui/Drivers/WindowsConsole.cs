@@ -1,4 +1,4 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Drivers
 {
     using System;
     using System.ComponentModel;

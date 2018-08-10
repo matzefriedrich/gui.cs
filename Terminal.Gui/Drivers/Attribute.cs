@@ -1,4 +1,4 @@
-namespace Terminal.Gui
+namespace Terminal.Gui.Drivers
 {
     /// <summary>
     ///     Attributes are used as elements that contain both a foreground and a background or platform specific features
@@ -13,7 +13,7 @@ namespace Terminal.Gui
         internal int value;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Attribute" /> struct.
+        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Drivers.Attribute" /> struct.
         /// </summary>
         /// <param name="value">Value.</param>
         public Attribute(int value)

@@ -1,5 +1,7 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Views
 {
+    using Terminal.Gui.Types;
+
     /// <summary>
     ///     Progress bar can indicate progress of an activity visually.
     /// </summary>
@@ -23,7 +25,7 @@
         private bool isActivity;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.ProgressBar" /> class, starts in percentage mode with
+        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Views.ProgressBar" /> class, starts in percentage mode with
         ///     an absolute position and size.
         /// </summary>
         /// <param name="rect">Rect.</param>
@@ -34,7 +36,7 @@
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.ProgressBar" /> class, starts in percentage mode and
+        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Views.ProgressBar" /> class, starts in percentage mode and
         ///     uses relative layout.
         /// </summary>
         public ProgressBar()

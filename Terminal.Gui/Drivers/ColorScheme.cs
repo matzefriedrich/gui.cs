@@ -1,4 +1,4 @@
-namespace Terminal.Gui
+namespace Terminal.Gui.Drivers
 {
     /// <summary>
     ///     Color scheme definitions, they cover some common scenarios and are used

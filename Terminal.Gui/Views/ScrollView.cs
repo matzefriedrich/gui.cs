@@ -13,9 +13,11 @@
 // - Raise events
 // - Perhaps allow an option to not display the scrollbar arrow indicators?
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Views
 {
     using System;
+
+    using Terminal.Gui.Types;
 
     /// <summary>
     ///     Scrollviews are views that present a window into a virtual space where children views are added.  Similar to the

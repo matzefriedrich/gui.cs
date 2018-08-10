@@ -26,15 +26,16 @@
 // SOFTWARE.
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Drivers
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Mono.Terminal;
-
     using NStack;
+
+    using Terminal.Gui.MonoCurses;
+    using Terminal.Gui.Types;
 
     internal class WindowsDriver : ConsoleDriver, IMainLoopDriver
     {

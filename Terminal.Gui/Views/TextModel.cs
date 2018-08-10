@@ -1,4 +1,4 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Views
 {
     using System;
     using System.Collections.Generic;

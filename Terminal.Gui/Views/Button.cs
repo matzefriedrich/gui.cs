@@ -5,11 +5,13 @@
 //   Miguel de Icaza (miguel@gnome.org)
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Views
 {
     using System;
 
     using NStack;
+
+    using Terminal.Gui.Types;
 
     /// <summary>
     ///     Button is a view that provides an item that invokes a callback when activated.
@@ -113,7 +115,7 @@ namespace Terminal.Gui
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Button" /> is the default action to activate
+        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Views.Button" /> is the default action to activate
         ///     on return on a dialog.
         /// </summary>
         /// <value><c>true</c> if is default; otherwise, <c>false</c>.</value>

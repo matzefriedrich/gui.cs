@@ -1,6 +1,11 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Views
 {
     using System;
+
+    using Terminal.Gui.Drivers;
+    using Terminal.Gui.Types;
+
+    using Attribute = Terminal.Gui.Drivers.Attribute;
 
     /// <summary>
     ///     A menu bar for your application.
@@ -17,7 +22,7 @@
 
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.MenuBar" /> class with the specified set of toplevel
+        ///     Initializes a new instance of the <see cref="T:Terminal.Gui.Views.MenuBar" /> class with the specified set of toplevel
         ///     menu items.
         /// </summary>
         /// <param name="menus">Menus.</param>

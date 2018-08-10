@@ -1,4 +1,4 @@
-namespace Terminal.Gui
+namespace Terminal.Gui.Drivers
 {
     /// <summary>
     ///     Basic colors that can be used to set the foreground and background colors in console applications.  These can only

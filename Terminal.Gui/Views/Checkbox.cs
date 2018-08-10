@@ -5,11 +5,13 @@
 //   Miguel de Icaza (miguel@gnome.org)
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Views
 {
     using System;
 
     using NStack;
+
+    using Terminal.Gui.Types;
 
     /// <summary>
     ///     The Checkbox View shows an on/off toggle that the user can set

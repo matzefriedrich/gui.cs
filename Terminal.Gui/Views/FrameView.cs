@@ -5,9 +5,11 @@
 //   Miguel de Icaza (miguel@gnome.org)
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Views
 {
     using NStack;
+
+    using Terminal.Gui.Types;
 
     /// <summary>
     ///     The FrameView is a container frame that draws a frame around the contents

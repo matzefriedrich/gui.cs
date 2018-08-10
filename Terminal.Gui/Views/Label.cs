@@ -5,7 +5,7 @@
 //   Miguel de Icaza (miguel@gnome.org)
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Views
 {
     using System;
     using System.Collections.Generic;
@@ -13,6 +13,10 @@ namespace Terminal.Gui
     using System.Text;
 
     using NStack;
+
+    using Terminal.Gui.Types;
+
+    using Attribute = Terminal.Gui.Drivers.Attribute;
 
     /// <summary>
     ///     Label view, displays a string at a given position, can include multiple lines.

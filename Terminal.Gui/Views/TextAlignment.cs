@@ -1,4 +1,4 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Views
 {
     /// <summary>
     ///     Text alignment enumeration, controls how text is displayed.

@@ -1,328 +1,334 @@
 using System;
 using System.IO;
 
-using Mono.Terminal;
-
 using Terminal.Gui;
 
-internal static class Demo
+namespace Terminal
 {
-    public static Label ml2;
+    using Terminal.Gui.Dialogs;
+    using Terminal.Gui.MonoCurses;
+    using Terminal.Gui.Types;
+    using Terminal.Gui.Views;
 
-    public static Label ml;
-
-
-    private static void ShowTextAlignments(View container)
+    internal static class Demo
     {
-        container.Add(
-            new Label(new Rect(0, 0, 40, 3), "1-Hello world, how are you doing today") {TextAlignment = TextAlignment.Left},
-            new Label(new Rect(0, 4, 40, 3), "2-Hello world, how are you doing today") {TextAlignment = TextAlignment.Right},
-            new Label(new Rect(0, 8, 40, 3), "3-Hello world, how are you doing today") {TextAlignment = TextAlignment.Centered},
-            new Label(new Rect(0, 12, 40, 3), "4-Hello world, how are you doing today") {TextAlignment = TextAlignment.Justified});
-    }
+        public static Label ml2;
 
-    private static void ShowEntries(View container)
-    {
-        var scrollView = new ScrollView(new Rect(50, 10, 20, 8))
+        public static Label ml;
+
+
+        private static void ShowTextAlignments(View container)
         {
-            ContentSize = new Size(100, 100),
-            ContentOffset = new Point(-1, -1),
-            ShowVerticalScrollIndicator = true,
-            ShowHorizontalScrollIndicator = true
-        };
-
-        scrollView.Add(new Box10x(0, 0));
-        //scrollView.Add (new Filler (new Rect (0, 0, 40, 40)));
-
-        // This is just to debug the visuals of the scrollview when small
-        var scrollView2 = new ScrollView(new Rect(72, 10, 3, 3))
-        {
-            ContentSize = new Size(100, 100),
-            ShowVerticalScrollIndicator = true,
-            ShowHorizontalScrollIndicator = true
-        };
-        scrollView2.Add(new Box10x(0, 0));
-        var progress = new ProgressBar(new Rect(68, 1, 10, 1));
-
-        bool timer(MainLoop caller)
-        {
-            progress.Pulse();
-            return true;
+            container.Add(
+                new Label(new Rect(0, 0, 40, 3), "1-Hello world, how are you doing today") {TextAlignment = TextAlignment.Left},
+                new Label(new Rect(0, 4, 40, 3), "2-Hello world, how are you doing today") {TextAlignment = TextAlignment.Right},
+                new Label(new Rect(0, 8, 40, 3), "3-Hello world, how are you doing today") {TextAlignment = TextAlignment.Centered},
+                new Label(new Rect(0, 12, 40, 3), "4-Hello world, how are you doing today") {TextAlignment = TextAlignment.Justified});
         }
 
-        //Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (300), timer);
-
-
-        // A little convoluted, this is because I am using this to test the
-        // layout based on referencing elements of another view:
-
-        var login = new Label("Login: ") {X = 3, Y = 6};
-        var password = new Label("Password: ")
+        private static void ShowEntries(View container)
         {
-            X = Pos.Left(login),
-            Y = Pos.Bottom(login) + 1
-        };
-        var loginText = new TextField("")
-        {
-            X = Pos.Right(password),
-            Y = Pos.Top(login),
-            Width = 40
-        };
-        var passText = new TextField("")
-        {
-            Secret = true,
-            X = Pos.Left(loginText),
-            Y = Pos.Top(password),
-            Width = Dim.Width(loginText)
-        };
+            var scrollView = new ScrollView(new Rect(50, 10, 20, 8))
+            {
+                ContentSize = new Size(100, 100),
+                ContentOffset = new Point(-1, -1),
+                ShowVerticalScrollIndicator = true,
+                ShowHorizontalScrollIndicator = true
+            };
 
-        // Add some content
-        container.Add(
-            login,
-            loginText,
-            password,
-            passText,
-            new FrameView(new Rect(3, 10, 25, 6), "Options")
-            {
-                new CheckBox(1, 0, "Remember me"),
-                new RadioGroup(1, 2, new[] {"_Personal", "_Company"})
-            },
-            new ListView(new Rect(60, 6, 16, 4), new[]
-            {
-                "First row",
-                "<>",
-                "This is a very long row that should overflow what is shown",
-                "4th",
-                "There is an empty slot on the second row",
-                "Whoa",
-                "This is so cool"
-            }),
-            scrollView,
-            //scrollView2,
-            new Button(3, 19, "Ok"),
-            new Button(10, 19, "Cancel"),
-            progress,
-            new Label(3, 22, "Press F9 (on Unix, ESC+9 is an alias) to activate the menubar")
-        );
-    }
+            scrollView.Add(new Box10x(0, 0));
+            //scrollView.Add (new Filler (new Rect (0, 0, 40, 40)));
 
-    private static void NewFile()
-    {
-        var d = new Dialog(
-            "New File", 50, 20,
-            new Button("Ok", true) {Clicked = () => { Application.RequestStop(); }},
-            new Button("Cancel") {Clicked = () => { Application.RequestStop(); }});
-        ml2 = new Label(1, 1, "Mouse Debug Line");
-        d.Add(ml2);
-        Application.Run(d);
-    }
+            // This is just to debug the visuals of the scrollview when small
+            var scrollView2 = new ScrollView(new Rect(72, 10, 3, 3))
+            {
+                ContentSize = new Size(100, 100),
+                ShowVerticalScrollIndicator = true,
+                ShowHorizontalScrollIndicator = true
+            };
+            scrollView2.Add(new Box10x(0, 0));
+            var progress = new ProgressBar(new Rect(68, 1, 10, 1));
 
-    // 
-    // Creates a nested editor
-    private static void Editor(Toplevel top)
-    {
-        Rect tframe = top.Frame;
-        var ntop = new Toplevel(tframe);
-        var menu = new MenuBar(new[]
-        {
-            new MenuBarItem("_File", new[]
+            bool timer(MainLoop caller)
             {
-                new MenuItem("_Close", "", () => { Application.RequestStop(); })
-            }),
-            new MenuBarItem("_Edit", new[]
-            {
-                new MenuItem("_Copy", "", null),
-                new MenuItem("C_ut", "", null),
-                new MenuItem("_Paste", "", null)
-            })
-        });
-        ntop.Add(menu);
-
-        string fname = null;
-        foreach (string s in new[] {"/etc/passwd", "c:\\windows\\win.ini"})
-            if (File.Exists(s))
-            {
-                fname = s;
-                break;
+                progress.Pulse();
+                return true;
             }
 
-        var win = new Window(fname ?? "Untitled")
-        {
-            X = 0,
-            Y = 1,
-            Width = Dim.Fill(),
-            Height = Dim.Fill()
-        };
-        ntop.Add(win);
+            //Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (300), timer);
 
-        var text = new TextView(new Rect(0, 0, tframe.Width - 2, tframe.Height - 3));
 
-        if (fname != null)
-            text.Text = File.ReadAllText(fname);
-        win.Add(text);
+            // A little convoluted, this is because I am using this to test the
+            // layout based on referencing elements of another view:
 
-        Application.Run(ntop);
-    }
-
-    private static bool Quit()
-    {
-        int n = MessageBox.Query(50, 7, "Quit Demo", "Are you sure you want to quit this demo?", "Yes", "No");
-        return n == 0;
-    }
-
-    private static void Close()
-    {
-        MessageBox.ErrorQuery(50, 5, "Error", "There is nothing to close", "Ok");
-    }
-
-    // Watch what happens when I try to introduce a newline after the first open brace
-    // it introduces a new brace instead, and does not indent.  Then watch me fight
-    // the editor as more oddities happen.
-
-    public static void Open()
-    {
-        var d = new OpenDialog("Open", "Open a file");
-        Application.Run(d);
-    }
-
-    public static void ShowHex(Toplevel top)
-    {
-        Rect tframe = top.Frame;
-        var ntop = new Toplevel(tframe);
-        var menu = new MenuBar(new[]
-        {
-            new MenuBarItem("_File", new[]
+            var login = new Label("Login: ") {X = 3, Y = 6};
+            var password = new Label("Password: ")
             {
-                new MenuItem("_Close", "", () => { Application.RequestStop(); })
-            })
-        });
-        ntop.Add(menu);
+                X = Pos.Left(login),
+                Y = Pos.Bottom(login) + 1
+            };
+            var loginText = new TextField("")
+            {
+                X = Pos.Right(password),
+                Y = Pos.Top(login),
+                Width = 40
+            };
+            var passText = new TextField("")
+            {
+                Secret = true,
+                X = Pos.Left(loginText),
+                Y = Pos.Top(password),
+                Width = Dim.Width(loginText)
+            };
 
-        var win = new Window("/etc/passwd")
+            // Add some content
+            container.Add(
+                login,
+                loginText,
+                password,
+                passText,
+                new FrameView(new Rect(3, 10, 25, 6), "Options")
+                {
+                    new CheckBox(1, 0, "Remember me"),
+                    new RadioGroup(1, 2, new[] {"_Personal", "_Company"})
+                },
+                new ListView(new Rect(60, 6, 16, 4), new[]
+                {
+                    "First row",
+                    "<>",
+                    "This is a very long row that should overflow what is shown",
+                    "4th",
+                    "There is an empty slot on the second row",
+                    "Whoa",
+                    "This is so cool"
+                }),
+                scrollView,
+                //scrollView2,
+                new Button(3, 19, "Ok"),
+                new Button(10, 19, "Cancel"),
+                progress,
+                new Label(3, 22, "Press F9 (on Unix, ESC+9 is an alias) to activate the menubar")
+            );
+        }
+
+        private static void NewFile()
         {
-            X = 0,
-            Y = 1,
-            Width = Dim.Fill(),
-            Height = Dim.Fill()
-        };
-        ntop.Add(win);
+            var d = new Dialog(
+                "New File", 50, 20,
+                new Button("Ok", true) {Clicked = () => { Application.RequestStop(); }},
+                new Button("Cancel") {Clicked = () => { Application.RequestStop(); }});
+            ml2 = new Label(1, 1, "Mouse Debug Line");
+            d.Add(ml2);
+            Application.Run(d);
+        }
 
-        FileStream source = File.OpenRead("/etc/passwd");
-        var hex = new HexView(source)
+        // 
+        // Creates a nested editor
+        private static void Editor(Toplevel top)
         {
-            X = 0,
-            Y = 0,
-            Width = Dim.Fill(),
-            Height = Dim.Fill()
-        };
-        win.Add(hex);
-        Application.Run(ntop);
-    }
+            Rect tframe = top.Frame;
+            var ntop = new Toplevel(tframe);
+            var menu = new MenuBar(new[]
+            {
+                new MenuBarItem("_File", new[]
+                {
+                    new MenuItem("_Close", "", () => { Application.RequestStop(); })
+                }),
+                new MenuBarItem("_Edit", new[]
+                {
+                    new MenuItem("_Copy", "", null),
+                    new MenuItem("C_ut", "", null),
+                    new MenuItem("_Paste", "", null)
+                })
+            });
+            ntop.Add(menu);
 
-    private static void Main()
-    {
-        //Application.UseSystemConsole = true;
-        Application.Init();
-        Toplevel top = Application.Top;
-        Rect tframe = top.Frame;
-        //Open ();
+            string fname = null;
+            foreach (string s in new[] {"/etc/passwd", "c:\\windows\\win.ini"})
+                if (File.Exists(s))
+                {
+                    fname = s;
+                    break;
+                }
+
+            var win = new Window(fname ?? "Untitled")
+            {
+                X = 0,
+                Y = 1,
+                Width = Dim.Fill(),
+                Height = Dim.Fill()
+            };
+            ntop.Add(win);
+
+            var text = new TextView(new Rect(0, 0, tframe.Width - 2, tframe.Height - 3));
+
+            if (fname != null)
+                text.Text = File.ReadAllText(fname);
+            win.Add(text);
+
+            Application.Run(ntop);
+        }
+
+        private static bool Quit()
+        {
+            int n = MessageBox.Query(50, 7, "Quit Demo", "Are you sure you want to quit this demo?", "Yes", "No");
+            return n == 0;
+        }
+
+        private static void Close()
+        {
+            MessageBox.ErrorQuery(50, 5, "Error", "There is nothing to close", "Ok");
+        }
+
+        // Watch what happens when I try to introduce a newline after the first open brace
+        // it introduces a new brace instead, and does not indent.  Then watch me fight
+        // the editor as more oddities happen.
+
+        public static void Open()
+        {
+            var d = new OpenDialog("Open", "Open a file");
+            Application.Run(d);
+        }
+
+        public static void ShowHex(Toplevel top)
+        {
+            Rect tframe = top.Frame;
+            var ntop = new Toplevel(tframe);
+            var menu = new MenuBar(new[]
+            {
+                new MenuBarItem("_File", new[]
+                {
+                    new MenuItem("_Close", "", () => { Application.RequestStop(); })
+                })
+            });
+            ntop.Add(menu);
+
+            var win = new Window("/etc/passwd")
+            {
+                X = 0,
+                Y = 1,
+                Width = Dim.Fill(),
+                Height = Dim.Fill()
+            };
+            ntop.Add(win);
+
+            FileStream source = File.OpenRead("/etc/passwd");
+            var hex = new HexView(source)
+            {
+                X = 0,
+                Y = 0,
+                Width = Dim.Fill(),
+                Height = Dim.Fill()
+            };
+            win.Add(hex);
+            Application.Run(ntop);
+        }
+
+        private static void Main()
+        {
+            //Application.UseSystemConsole = true;
+            Application.Init();
+            Toplevel top = Application.Top;
+            Rect tframe = top.Frame;
+            //Open ();
 #if true
-        var win = new Window("Hello")
-        {
-            X = 0,
-            Y = 1,
-            Width = Dim.Fill(),
-            Height = Dim.Fill()
-        };
+            var win = new Window("Hello")
+            {
+                X = 0,
+                Y = 1,
+                Width = Dim.Fill(),
+                Height = Dim.Fill()
+            };
 #else
 		var win = new Window (new Rect (0, 1, tframe.Width, tframe.Height - 1), "Hello");
 #endif
-        var menu = new MenuBar(new[]
-        {
-            new MenuBarItem("_File", new[]
+            var menu = new MenuBar(new[]
             {
-                new MenuItem("Text Editor Demo", "", () => { Editor(top); }),
-                new MenuItem("_New", "Creates new file", NewFile),
-                new MenuItem("_Open", "", Open),
-                new MenuItem("_Hex", "", () => ShowHex(top)),
-                new MenuItem("_Close", "", () => Close()),
-                new MenuItem("_Quit", "", () =>
+                new MenuBarItem("_File", new[]
                 {
-                    if (Quit()) top.Running = false;
+                    new MenuItem("Text Editor Demo", "", () => { Editor(top); }),
+                    new MenuItem("_New", "Creates new file", NewFile),
+                    new MenuItem("_Open", "", Open),
+                    new MenuItem("_Hex", "", () => ShowHex(top)),
+                    new MenuItem("_Close", "", () => Close()),
+                    new MenuItem("_Quit", "", () =>
+                    {
+                        if (Quit()) top.Running = false;
+                    })
+                }),
+                new MenuBarItem("_Edit", new[]
+                {
+                    new MenuItem("_Copy", "", null),
+                    new MenuItem("C_ut", "", null),
+                    new MenuItem("_Paste", "", null)
                 })
-            }),
-            new MenuBarItem("_Edit", new[]
-            {
-                new MenuItem("_Copy", "", null),
-                new MenuItem("C_ut", "", null),
-                new MenuItem("_Paste", "", null)
-            })
-        });
+            });
 
-        ShowEntries(win);
+            ShowEntries(win);
 
-        var count = 0;
-        ml = new Label(new Rect(3, 17, 47, 1), "Mouse: ");
-        Application.RootMouseEvent += delegate(MouseEvent me) { ml.Text = $"Mouse: ({me.X},{me.Y}) - {me.Flags} {count++}"; };
+            var count = 0;
+            ml = new Label(new Rect(3, 17, 47, 1), "Mouse: ");
+            Application.RootMouseEvent += delegate(MouseEvent me) { ml.Text = $"Mouse: ({me.X},{me.Y}) - {me.Flags} {count++}"; };
 
-        win.Add(ml);
+            win.Add(ml);
 
-        // ShowTextAlignments (win);
-        top.Add(win);
-        top.Add(menu);
-        Application.Run();
-    }
-
-    private class Box10x : View
-    {
-        public Box10x(int x, int y) : base(new Rect(x, y, 10, 10))
-        {
+            // ShowTextAlignments (win);
+            top.Add(win);
+            top.Add(menu);
+            Application.Run();
         }
 
-        public override void Redraw(Rect region)
+        private class Box10x : View
         {
-            Driver.SetAttribute(this.ColorScheme.Focus);
-
-            for (var y = 0; y < 10; y++)
+            public Box10x(int x, int y) : base(new Rect(x, y, 10, 10))
             {
-                this.Move(0, y);
-                for (var x = 0; x < 10; x++)
-                    Driver.AddRune((Rune) ('0' + (x + y) % 10));
+            }
+
+            public override void Redraw(Rect region)
+            {
+                Driver.SetAttribute(this.ColorScheme.Focus);
+
+                for (var y = 0; y < 10; y++)
+                {
+                    this.Move(0, y);
+                    for (var x = 0; x < 10; x++)
+                        Driver.AddRune((Rune) ('0' + (x + y) % 10));
+                }
             }
         }
-    }
 
-    private class Filler : View
-    {
-        public Filler(Rect rect) : base(rect)
+        private class Filler : View
         {
-        }
-
-        public override void Redraw(Rect region)
-        {
-            Driver.SetAttribute(this.ColorScheme.Focus);
-            Rect f = this.Frame;
-
-            for (var y = 0; y < f.Width; y++)
+            public Filler(Rect rect) : base(rect)
             {
-                this.Move(0, y);
-                for (var x = 0; x < f.Height; x++)
-                {
-                    Rune r;
-                    switch (x % 3)
-                    {
-                        case 0:
-                            r = '.';
-                            break;
-                        case 1:
-                            r = 'o';
-                            break;
-                        default:
-                            r = 'O';
-                            break;
-                    }
+            }
 
-                    Driver.AddRune(r);
+            public override void Redraw(Rect region)
+            {
+                Driver.SetAttribute(this.ColorScheme.Focus);
+                Rect f = this.Frame;
+
+                for (var y = 0; y < f.Width; y++)
+                {
+                    this.Move(0, y);
+                    for (var x = 0; x < f.Height; x++)
+                    {
+                        Rune r;
+                        switch (x % 3)
+                        {
+                            case 0:
+                                r = '.';
+                                break;
+                            case 1:
+                                r = 'o';
+                                break;
+                            default:
+                                r = 'O';
+                                break;
+                        }
+
+                        Driver.AddRune(r);
+                    }
                 }
             }
         }

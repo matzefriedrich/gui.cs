@@ -6,11 +6,15 @@
 // - Bug showing the last line
 // 
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Views
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+
+    using Terminal.Gui.Types;
+
+    using Attribute = Terminal.Gui.Drivers.Attribute;
 
     /// <summary>
     ///     An Hex viewer an editor view over a System.IO.Stream
@@ -114,7 +118,7 @@ namespace Terminal.Gui
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.HexView" /> allow editing of the contents of
+        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Views.HexView" /> allow editing of the contents of
         ///     the underlying stream.
         /// </summary>
         /// <value><c>true</c> if allow edits; otherwise, <c>false</c>.</value>

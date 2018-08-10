@@ -5,16 +5,15 @@
 //   Miguel de Icaza (miguel@gnome.org)
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Drivers
 {
     using System;
     using System.Collections.Generic;
 
-    using Mono.Terminal;
-
     using NStack;
 
-    using Unix.Terminal;
+    using Terminal.Gui.MonoCurses;
+    using Terminal.Gui.Types;
 
     /// <summary>
     ///     This is the Curses driver for the gui.cs/Terminal framework.

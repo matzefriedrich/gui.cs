@@ -1,4 +1,4 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Dialogs
 {
     using System;
     using System.Collections.Generic;
@@ -6,6 +6,10 @@
     using System.Linq;
 
     using NStack;
+
+    using Terminal.Gui.Types;
+
+    using Attribute = Terminal.Gui.Drivers.Attribute;
 
     internal class DirListView : View
     {

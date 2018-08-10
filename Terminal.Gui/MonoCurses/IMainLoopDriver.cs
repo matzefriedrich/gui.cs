@@ -1,4 +1,4 @@
-namespace Mono.Terminal
+namespace Terminal.Gui.MonoCurses
 {
     /// <summary>
     ///     Public interface to create your own platform specific main loop driver.

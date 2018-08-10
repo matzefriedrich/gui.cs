@@ -9,12 +9,15 @@
 //   * Use a line separator to show the file listing, so we can use same colors as the rest
 //   * DirListView: Add mouse support
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Dialogs
 {
     using System;
     using System.IO;
 
     using NStack;
+
+    using Terminal.Gui.Types;
+    using Terminal.Gui.Views;
 
     /// <summary>
     ///     Base class for the OpenDialog and the SaveDialog
@@ -137,13 +140,13 @@ namespace Terminal.Gui
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.FileDialog" /> can create directories.
+        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Dialogs.FileDialog" /> can create directories.
         /// </summary>
         /// <value><c>true</c> if can create directories; otherwise, <c>false</c>.</value>
         public bool CanCreateDirectories { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.FileDialog" /> is extension hidden.
+        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Dialogs.FileDialog" /> is extension hidden.
         /// </summary>
         /// <value><c>true</c> if is extension hidden; otherwise, <c>false</c>.</value>
         public bool IsExtensionHidden { get; set; }
@@ -174,7 +177,7 @@ namespace Terminal.Gui
 
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.FileDialog" /> allows the file to be saved
+        ///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.Dialogs.FileDialog" /> allows the file to be saved
         ///     with a different extension
         /// </summary>
         /// <value><c>true</c> if allows other file types; otherwise, <c>false</c>.</value>

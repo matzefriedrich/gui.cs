@@ -8,9 +8,12 @@
 //   Add accelerator support, but should also support chords (ShortCut in MenuItem)
 //   Allow menus inside menus
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Views
 {
     using System;
+
+    using Terminal.Gui.Drivers;
+    using Terminal.Gui.Types;
 
     internal class Menu : View
     {

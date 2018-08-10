@@ -1,6 +1,8 @@
 ﻿namespace Designer
 {
     using Terminal.Gui;
+    using Terminal.Gui.Types;
+    using Terminal.Gui.Views;
 
     internal class Surface : Window
     {

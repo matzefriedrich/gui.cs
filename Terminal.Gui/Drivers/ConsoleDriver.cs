@@ -5,13 +5,14 @@
 //   Miguel de Icaza (miguel@gnome.org)
 //
 
-namespace Terminal.Gui
+namespace Terminal.Gui.Drivers
 {
     using System;
 
-    using Mono.Terminal;
-
     using NStack;
+
+    using Terminal.Gui.MonoCurses;
+    using Terminal.Gui.Types;
 
     /// <summary>
     ///     ConsoleDriver is an abstract class that defines the requirements for a console driver.   One implementation if the

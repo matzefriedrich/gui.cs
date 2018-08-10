@@ -1,6 +1,8 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Views
 {
     using System;
+
+    using Terminal.Gui.Types;
 
     /// <summary>
     ///     ScrollBarViews are views that display a 1-character scrollbar, either horizontal or vertical

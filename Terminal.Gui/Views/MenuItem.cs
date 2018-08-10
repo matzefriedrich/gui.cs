@@ -1,4 +1,4 @@
-﻿namespace Terminal.Gui
+﻿namespace Terminal.Gui.Views
 {
     using System;
 
@@ -25,7 +25,7 @@
         public Key ShortCut;
 
         /// <summary>
-        ///     Initializes a new <see cref="T:Terminal.Gui.MenuItem" />.
+        ///     Initializes a new <see cref="T:Terminal.Gui.Views.MenuItem" />.
         /// </summary>
         /// <param name="title">Title for the menu item.</param>
         /// <param name="help">Help text to display.</param>

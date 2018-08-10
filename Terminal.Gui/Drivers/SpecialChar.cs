@@ -1,4 +1,4 @@
-namespace Terminal.Gui
+namespace Terminal.Gui.Drivers
 {
     /// <summary>
     ///     Special characters that can be drawn with Driver.AddSpecial.
