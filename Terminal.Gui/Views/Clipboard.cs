@@ -1,7 +1,9 @@
-﻿namespace Terminal.Gui {
-	using NStack;
+﻿namespace Terminal.Gui
+{
+    using NStack;
 
-	public static class Clipboard {
-		public static ustring Contents { get; set; }
-	}
+    public static class Clipboard
+    {
+        public static ustring Contents { get; set; }
+    }
 }
