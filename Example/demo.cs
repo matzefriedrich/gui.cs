@@ -1,10 +1,9 @@
-using System;
-using System.IO;
-
-using Terminal.Gui;
-
 namespace Terminal
 {
+    using System;
+    using System.IO;
+
+    using Terminal.Gui;
     using Terminal.Gui.Dialogs;
     using Terminal.Gui.MonoCurses;
     using Terminal.Gui.Types;

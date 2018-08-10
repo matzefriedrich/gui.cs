@@ -40,7 +40,7 @@ namespace Terminal.Gui.Dialogs
 
         internal bool canceled;
 
-        internal DirListView dirListView;
+        internal readonly DirListView dirListView;
 
         public FileDialog(ustring title, ustring prompt, ustring nameFieldLabel, ustring message) : base(title, Driver.Cols - 20, Driver.Rows - 5, null)
         {

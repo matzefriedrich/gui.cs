@@ -4,13 +4,6 @@
     using Terminal.Gui.Types;
     using Terminal.Gui.Views;
 
-    internal class Surface : Window
-    {
-        public Surface() : base("Designer")
-        {
-        }
-    }
-
     internal class MainClass
     {
         public static void Main(string[] args)
