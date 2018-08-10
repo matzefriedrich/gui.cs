@@ -25,148 +25,135 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using System;
-using System.Runtime.InteropServices;
 
 namespace Unix.Terminal {
+	using System;
 
-	internal partial class Curses {
+	partial class Curses {
 		internal class Window {
 			public readonly IntPtr Handle;
-			static Window curscr;
-			static Window stdscr;
-	
-			static Window ()
+
+			static Window()
 			{
-				Curses.initscr ();
-				stdscr = new Window (Curses.console_sharp_get_stdscr ());
-				curscr = new Window (Curses.console_sharp_get_curscr ());
+				initscr();
+				Standard = new Window(console_sharp_get_stdscr());
+				Current = new Window(console_sharp_get_curscr());
 			}
-			
-			internal Window (IntPtr handle) 
+
+			internal Window(IntPtr handle)
 			{
-				Handle = handle;
+				this.Handle = handle;
 			}
-			
-			static public Window Standard {
-				get {
-					return stdscr;
-				}
-			}
-	
-			static public Window Current {
-				get {
-					return curscr;
-				}
-			}
-	
-			
-			public int wtimeout (int delay)
+
+			public static Window Standard { get; }
+
+			public static Window Current { get; }
+
+
+			public int wtimeout(int delay)
 			{
-				return Curses.wtimeout (Handle, delay);
+				return Curses.wtimeout(this.Handle, delay);
 			}
-	
-			public int notimeout (bool bf)
+
+			public int notimeout(bool bf)
 			{
-				return Curses.notimeout (Handle, bf);
+				return Curses.notimeout(this.Handle, bf);
 			}
-	
-			public int keypad (bool bf)
+
+			public int keypad(bool bf)
 			{
-				return Curses.keypad (Handle, bf);
+				return Curses.keypad(this.Handle, bf);
 			}
-	
-			public int meta (bool bf)
+
+			public int meta(bool bf)
 			{
-				return Curses.meta (Handle, bf);
+				return Curses.meta(this.Handle, bf);
 			}
-	
-			public int intrflush (bool bf)
+
+			public int intrflush(bool bf)
 			{
-				return Curses.intrflush (Handle, bf);
+				return Curses.intrflush(this.Handle, bf);
 			}
-	
-			public int clearok (bool bf)
+
+			public int clearok(bool bf)
 			{
-				return Curses.clearok (Handle, bf);
+				return Curses.clearok(this.Handle, bf);
 			}
-			
-			public int idlok (bool bf)
+
+			public int idlok(bool bf)
 			{
-				return Curses.idlok (Handle, bf);
+				return Curses.idlok(this.Handle, bf);
 			}
-			
-			public void idcok (bool bf)
+
+			public void idcok(bool bf)
 			{
-				Curses.idcok (Handle, bf);
+				Curses.idcok(this.Handle, bf);
 			}
-			
-			public void immedok (bool bf)
+
+			public void immedok(bool bf)
 			{
-				Curses.immedok (Handle, bf);
+				Curses.immedok(this.Handle, bf);
 			}
-			
-			public int leaveok (bool bf)
+
+			public int leaveok(bool bf)
 			{
-				return Curses.leaveok (Handle, bf);
+				return Curses.leaveok(this.Handle, bf);
 			}
-			
-			public int setscrreg (int top, int bot)
+
+			public int setscrreg(int top, int bot)
 			{
-				return Curses.wsetscrreg (Handle, top, bot);
+				return wsetscrreg(this.Handle, top, bot);
 			}
-			
-			public int scrollok (bool bf)
+
+			public int scrollok(bool bf)
 			{
-				return Curses.scrollok (Handle, bf);
+				return Curses.scrollok(this.Handle, bf);
 			}
-			
-			public int wrefresh ()
+
+			public int wrefresh()
 			{
-				return Curses.wrefresh (Handle);
+				return Curses.wrefresh(this.Handle);
 			}
-	
-			public int redrawwin ()
+
+			public int redrawwin()
 			{
-				return Curses.redrawwin (Handle);
+				return Curses.redrawwin(this.Handle);
 			}
-			
-			public int wredrawwin (int beg_line, int num_lines)
+
+			public int wredrawwin(int beg_line, int num_lines)
 			{
-				return Curses.wredrawwin (Handle, beg_line, num_lines);
+				return Curses.wredrawwin(this.Handle, beg_line, num_lines);
 			}
-	
-			public int wnoutrefresh ()
+
+			public int wnoutrefresh()
 			{
-				return Curses.wnoutrefresh (Handle);
+				return Curses.wnoutrefresh(this.Handle);
 			}
-	
-			public int move (int line, int col)
+
+			public int move(int line, int col)
 			{
-				return Curses.wmove (Handle, line, col);
+				return wmove(this.Handle, line, col);
 			}
-	
-			public int addch (char ch)
+
+			public int addch(char ch)
 			{
-				return Curses.waddch (Handle, ch);
+				return waddch(this.Handle, ch);
 			}
-	
-			public int refresh ()
+
+			public int refresh()
 			{
-				return Curses.wrefresh (Handle);
+				return Curses.wrefresh(this.Handle);
 			}
 		}
-	
-	 	// Currently unused, to do later
-	 	internal class Screen {
-	 		public readonly IntPtr Handle;
-	 		
-	 		internal Screen (IntPtr handle)
-	 		{
-	 			Handle = handle;
-	 		}
-	 	}
-	 
-	}
 
+		// Currently unused, to do later
+		internal class Screen {
+			public readonly IntPtr Handle;
+
+			internal Screen(IntPtr handle)
+			{
+				this.Handle = handle;
+			}
+		}
+	}
 }

@@ -5,98 +5,93 @@
 // - Support searching and highlighting of the search result
 // - Bug showing the last line
 // 
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Terminal.Gui {
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+
 	/// <summary>
-	/// An Hex viewer an editor view over a System.IO.Stream
+	///     An Hex viewer an editor view over a System.IO.Stream
 	/// </summary>
 	/// <remarks>
-	/// <para>
-	/// This provides a hex editor on top of a seekable stream with the left side showing an hex
-	/// dump of the values in the stream and the right side showing the contents (filterd to 
-	/// non-control sequence ascii characters).    
-	/// </para>
-	/// <para>
-	/// Users can switch from one side to the other by using the tab key.  
-	/// </para>
-	/// <para>
-	/// If you want to enable editing, set the AllowsEdits property, once that is done, the user
-	/// can make changes to the hexadecimal values of the stream.   Any changes done are tracked
-	/// in the Edits property which is a sorted dictionary indicating the position where the 
-	/// change was made and the new value.    A convenience ApplyEdits method can be used to c
-	/// apply the methods to the underlying stream.
-	/// </para>
-	/// <para>
-	/// It is possible to control the first byte shown by setting the DisplayStart property 
-	/// to the offset that you want to start viewing.
-	/// </para>
+	///     <para>
+	///         This provides a hex editor on top of a seekable stream with the left side showing an hex
+	///         dump of the values in the stream and the right side showing the contents (filterd to
+	///         non-control sequence ascii characters).
+	///     </para>
+	///     <para>
+	///         Users can switch from one side to the other by using the tab key.
+	///     </para>
+	///     <para>
+	///         If you want to enable editing, set the AllowsEdits property, once that is done, the user
+	///         can make changes to the hexadecimal values of the stream.   Any changes done are tracked
+	///         in the Edits property which is a sorted dictionary indicating the position where the
+	///         change was made and the new value.    A convenience ApplyEdits method can be used to c
+	///         apply the methods to the underlying stream.
+	///     </para>
+	///     <para>
+	///         It is possible to control the first byte shown by setting the DisplayStart property
+	///         to the offset that you want to start viewing.
+	///     </para>
 	/// </remarks>
 	public class HexView : View {
-		SortedDictionary<long, byte> edits = new SortedDictionary<long, byte> ();
-		Stream source;
+		const int displayWidth = 9;
+
+		const int bsize = 4;
+
+		int bytesPerLine;
+
 		long displayStart, position;
+
+		SortedDictionary<long, byte> edits = new SortedDictionary<long, byte>();
+
 		bool firstNibble, leftSide;
 
+		Stream source;
+
 		/// <summary>
-		/// Creates and instance of the HexView that will render a seekable stream in hex on the allocated view region.
+		///     Creates and instance of the HexView that will render a seekable stream in hex on the allocated view region.
 		/// </summary>
 		/// <param name="source">Source stream, this stream should support seeking, or this will raise an exceotion.</param>
-		public HexView (Stream source) : base()
+		public HexView(Stream source)
 		{
-			Source = source;
+			this.Source = source;
 			this.source = source;
-			CanFocus = true;
-			leftSide = true;
-			firstNibble = true;
+			this.CanFocus = true;
+			this.leftSide = true;
+			this.firstNibble = true;
 		}
 
 		/// <summary>
-		/// The source stream to display on the hex view, the stream should support seeking.
+		///     The source stream to display on the hex view, the stream should support seeking.
 		/// </summary>
 		/// <value>The source.</value>
 		public Stream Source {
-			get => source;
+			get => this.source;
 			set {
 				if (value == null)
-					throw new ArgumentNullException ("source");
+					throw new ArgumentNullException("source");
 				if (!value.CanSeek)
-					throw new ArgumentException ("The source stream must be seekable (CanSeek property)", "source");
-				source = value;
+					throw new ArgumentException("The source stream must be seekable (CanSeek property)", "source");
+				this.source = value;
 
-				SetNeedsDisplay ();
+				this.SetNeedsDisplay();
 			}
-		}
-
-		internal void SetDisplayStart (long value)
-		{
-			if (value >= source.Length)
-				displayStart = source.Length - 1;
-			else if (value < 0)
-				displayStart = 0;
-			else
-				displayStart = value;
-			SetNeedsDisplay ();
 		}
 
 		/// <summary>
-		/// Configures the initial offset to be displayed at the top
+		///     Configures the initial offset to be displayed at the top
 		/// </summary>
 		/// <value>The display start.</value>
 		public long DisplayStart {
-			get => displayStart;
+			get => this.displayStart;
 			set {
-				position = value;
+				this.position = value;
 
-				SetDisplayStart (value);
+				this.SetDisplayStart(value);
 			}
 		}
-
-		const int displayWidth = 9;
-		const int bsize = 4;
-		int bytesPerLine;
 
 		public override Rect Frame {
 			get => base.Frame;
@@ -104,10 +99,35 @@ namespace Terminal.Gui {
 				base.Frame = value;
 
 				// Small buffers will just show the position, with 4 bytes
-				bytesPerLine = 4;
+				this.bytesPerLine = 4;
 				if (value.Width - displayWidth > 17)
-					bytesPerLine = 4 * ((value.Width - displayWidth) / 18);
+					this.bytesPerLine = 4 * ((value.Width - displayWidth) / 18);
 			}
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.HexView" /> allow editing of the contents of
+		///     the underlying stream.
+		/// </summary>
+		/// <value><c>true</c> if allow edits; otherwise, <c>false</c>.</value>
+		public bool AllowEdits { get; set; }
+
+		/// <summary>
+		///     Gets a list of the edits done to the buffer which is a sorted dictionary with the positions where the edit took
+		///     place and the value that was set.
+		/// </summary>
+		/// <value>The edits.</value>
+		public IReadOnlyDictionary<long, byte> Edits => this.edits;
+
+		internal void SetDisplayStart(long value)
+		{
+			if (value >= this.source.Length)
+				this.displayStart = this.source.Length - 1;
+			else if (value < 0)
+				this.displayStart = 0;
+			else
+				this.displayStart = value;
+			this.SetNeedsDisplay();
 		}
 
 		//
@@ -117,73 +137,75 @@ namespace Terminal.Gui {
 		// offset is relative to the buffer.
 		//
 		// 
-		byte GetData (byte [] buffer, int offset, out bool edited)
+		byte GetData(byte[] buffer, int offset, out bool edited)
 		{
-			var pos = DisplayStart + offset;
-			if (edits.TryGetValue (pos, out byte v)) {
+			long pos = this.DisplayStart + offset;
+			if (this.edits.TryGetValue(pos, out byte v)) {
 				edited = true;
 				return v;
 			}
+
 			edited = false;
-			return buffer [offset];
+			return buffer[offset];
 		}
 
-		public override void Redraw (Rect region)
+		public override void Redraw(Rect region)
 		{
 			Attribute currentAttribute;
-			var current = ColorScheme.Focus;
-			Driver.SetAttribute (current);
-			Move (0, 0);
+			var current = this.ColorScheme.Focus;
+			Driver.SetAttribute(current);
+			this.Move(0, 0);
 
-			var frame = Frame;
+			var frame = this.Frame;
 
-			var nblocks = bytesPerLine / 4;
+			int nblocks = this.bytesPerLine / 4;
 			var data = new byte [nblocks * 4 * frame.Height];
-			Source.Position = displayStart;
-			var n = source.Read (data, 0, data.Length);
+			this.Source.Position = this.displayStart;
+			int n = this.source.Read(data, 0, data.Length);
 
-			int activeColor = ColorScheme.HotNormal;
-			int trackingColor = ColorScheme.HotFocus;
+			int activeColor = this.ColorScheme.HotNormal;
+			int trackingColor = this.ColorScheme.HotFocus;
 
-			for (int line = 0; line < frame.Height; line++) {
-				var lineRect = new Rect (0, line, frame.Width, 1);
-				if (!region.Contains (lineRect))
+			for (var line = 0; line < frame.Height; line++) {
+				var lineRect = new Rect(0, line, frame.Width, 1);
+				if (!region.Contains(lineRect))
 					continue;
-				
-				Move (0, line);
-				Driver.SetAttribute (ColorScheme.HotNormal);
-				Driver.AddStr (string.Format ("{0:x8} ", displayStart + line * nblocks * 4));
 
-				currentAttribute = ColorScheme.HotNormal;
-				SetAttribute (ColorScheme.Normal);
+				this.Move(0, line);
+				Driver.SetAttribute(this.ColorScheme.HotNormal);
+				Driver.AddStr(string.Format("{0:x8} ", this.displayStart + line * nblocks * 4));
 
-				for (int block = 0; block < nblocks; block++) {
-					for (int b = 0; b < 4; b++) {
-						var offset = (line * nblocks * 4) + block * 4 + b;
+				currentAttribute = this.ColorScheme.HotNormal;
+				SetAttribute(this.ColorScheme.Normal);
+
+				for (var block = 0; block < nblocks; block++) {
+					for (var b = 0; b < 4; b++) {
+						int offset = line * nblocks * 4 + block * 4 + b;
 						bool edited;
-						var value = GetData (data, offset, out edited);
-						if (offset + displayStart == position || edited)
-							SetAttribute (leftSide ? activeColor : trackingColor);
+						byte value = this.GetData(data, offset, out edited);
+						if (offset + this.displayStart == this.position || edited)
+							SetAttribute(this.leftSide ? activeColor : trackingColor);
 						else
-							SetAttribute (ColorScheme.Normal);
+							SetAttribute(this.ColorScheme.Normal);
 
-						Driver.AddStr (offset >= n ? "  " : string.Format ("{0:x2}", value));
-						SetAttribute (ColorScheme.Normal);
-						Driver.AddRune (' ');
+						Driver.AddStr(offset >= n ? "  " : string.Format("{0:x2}", value));
+						SetAttribute(this.ColorScheme.Normal);
+						Driver.AddRune(' ');
 					}
-					Driver.AddStr (block + 1 == nblocks ? " " : "| ");
+
+					Driver.AddStr(block + 1 == nblocks ? " " : "| ");
 				}
 
 
-				for (int bitem = 0; bitem < nblocks * 4; bitem++) {
-					var offset = line * nblocks * 4 + bitem;
+				for (var bitem = 0; bitem < nblocks * 4; bitem++) {
+					int offset = line * nblocks * 4 + bitem;
 
-					bool edited = false;
+					var edited = false;
 					Rune c = ' ';
 					if (offset >= n)
 						c = ' ';
 					else {
-						var b = GetData (data, offset, out edited);
+						byte b = this.GetData(data, offset, out edited);
 						if (b < 32)
 							c = '.';
 						else if (b > 127)
@@ -191,146 +213,150 @@ namespace Terminal.Gui {
 						else
 							c = b;
 					}
-					if (offset + displayStart == position || edited)
-						SetAttribute (leftSide ? trackingColor : activeColor);
+
+					if (offset + this.displayStart == this.position || edited)
+						SetAttribute(this.leftSide ? trackingColor : activeColor);
 					else
-						SetAttribute (ColorScheme.Normal);
-					
-					Driver.AddRune (c);
+						SetAttribute(this.ColorScheme.Normal);
+
+					Driver.AddRune(c);
 				}
 			}
 
-			void SetAttribute (Attribute attribute)
+			void SetAttribute(Attribute attribute)
 			{
 				if (currentAttribute != attribute) {
 					currentAttribute = attribute;
-					Driver.SetAttribute (attribute);
+					Driver.SetAttribute(attribute);
 				}
 			}
-
 		}
 
 		/// <summary>
-		/// Positions the cursor based for the hex view
+		///     Positions the cursor based for the hex view
 		/// </summary>
-		public override void PositionCursor ()
+		public override void PositionCursor()
 		{
-			var delta = (int)(position - displayStart);
-			var line = delta / bytesPerLine;
-			var item = delta % bytesPerLine;
-			var block = item / 4;
-			var column = (item % 4) * 3;
+			var delta = (int) (this.position - this.displayStart);
+			int line = delta / this.bytesPerLine;
+			int item = delta % this.bytesPerLine;
+			int block = item / 4;
+			int column = item % 4 * 3;
 
-			if (leftSide)
-				Move (displayWidth + block * 14 + column + (firstNibble ? 0 : 1), line);
+			if (this.leftSide)
+				this.Move(displayWidth + block * 14 + column + (this.firstNibble ? 0 : 1), line);
 			else
-				Move (displayWidth + (bytesPerLine / 4) * 14 + item - 1, line);
+				this.Move(displayWidth + this.bytesPerLine / 4 * 14 + item - 1, line);
 		}
 
-		void RedisplayLine (long pos)
+		void RedisplayLine(long pos)
 		{
-			var delta = (int) (pos - DisplayStart);
-			var line = delta / bytesPerLine;
+			var delta = (int) (pos - this.DisplayStart);
+			int line = delta / this.bytesPerLine;
 
-			SetNeedsDisplay (new Rect (0, line, Frame.Width, 1));
+			this.SetNeedsDisplay(new Rect(0, line, this.Frame.Width, 1));
 		}
 
-		void CursorRight ()
+		void CursorRight()
 		{
-			RedisplayLine (position);
-			if (leftSide) {
-				if (firstNibble) {
-					firstNibble = false;
+			this.RedisplayLine(this.position);
+			if (this.leftSide) {
+				if (this.firstNibble) {
+					this.firstNibble = false;
 					return;
-				} else
-					firstNibble = true;
+				}
+
+				this.firstNibble = true;
 			}
-			if (position < source.Length)
-				position++;
-			if (position >= (DisplayStart + bytesPerLine * Frame.Height)) {
-				SetDisplayStart (DisplayStart + bytesPerLine);
-				SetNeedsDisplay ();
+
+			if (this.position < this.source.Length)
+				this.position++;
+			if (this.position >= this.DisplayStart + this.bytesPerLine * this.Frame.Height) {
+				this.SetDisplayStart(this.DisplayStart + this.bytesPerLine);
+				this.SetNeedsDisplay();
 			} else
-				RedisplayLine (position);
+				this.RedisplayLine(this.position);
 		}
 
-		void MoveUp (int bytes)
+		void MoveUp(int bytes)
 		{
-			RedisplayLine (position);
-			position -= bytes;
-			if (position < 0)
-				position = 0;
-			if (position < DisplayStart) {
-				SetDisplayStart (DisplayStart - bytes);
-				SetNeedsDisplay ();
+			this.RedisplayLine(this.position);
+			this.position -= bytes;
+			if (this.position < 0)
+				this.position = 0;
+			if (this.position < this.DisplayStart) {
+				this.SetDisplayStart(this.DisplayStart - bytes);
+				this.SetNeedsDisplay();
 			} else
-				RedisplayLine (position);
-
+				this.RedisplayLine(this.position);
 		}
 
-		void MoveDown (int bytes)
+		void MoveDown(int bytes)
 		{
-			RedisplayLine (position);
-			if (position + bytes < source.Length)
-				position += bytes;
-			if (position >= (DisplayStart + bytesPerLine * Frame.Height)) {
-				SetDisplayStart (DisplayStart + bytes);
-				SetNeedsDisplay ();
+			this.RedisplayLine(this.position);
+			if (this.position + bytes < this.source.Length)
+				this.position += bytes;
+			if (this.position >= this.DisplayStart + this.bytesPerLine * this.Frame.Height) {
+				this.SetDisplayStart(this.DisplayStart + bytes);
+				this.SetNeedsDisplay();
 			} else
-				RedisplayLine (position);			
+				this.RedisplayLine(this.position);
 		}
 
-		public override bool ProcessKey (KeyEvent keyEvent)
+		public override bool ProcessKey(KeyEvent keyEvent)
 		{
 			switch (keyEvent.Key) {
 			case Key.CursorLeft:
-				RedisplayLine (position);
-				if (leftSide) {
-					if (!firstNibble) {
-						firstNibble = true;
+				this.RedisplayLine(this.position);
+				if (this.leftSide) {
+					if (!this.firstNibble) {
+						this.firstNibble = true;
 						return true;
 					}
-					firstNibble = false;
+
+					this.firstNibble = false;
 				}
-				if (position == 0)
+
+				if (this.position == 0)
 					return true;
-				if (position - 1 < DisplayStart) {
-					SetDisplayStart (displayStart - bytesPerLine);
-					SetNeedsDisplay ();
+				if (this.position - 1 < this.DisplayStart) {
+					this.SetDisplayStart(this.displayStart - this.bytesPerLine);
+					this.SetNeedsDisplay();
 				} else
-					RedisplayLine (position);
-				position--;
+					this.RedisplayLine(this.position);
+
+				this.position--;
 				break;
 			case Key.CursorRight:
-				CursorRight ();
+				this.CursorRight();
 				break;
 			case Key.CursorDown:
-				MoveDown (bytesPerLine);
+				this.MoveDown(this.bytesPerLine);
 				break;
 			case Key.CursorUp:
-				MoveUp (bytesPerLine);
+				this.MoveUp(this.bytesPerLine);
 				break;
 			case Key.Tab:
-				leftSide = !leftSide;
-				RedisplayLine (position);
-				firstNibble = true;
+				this.leftSide = !this.leftSide;
+				this.RedisplayLine(this.position);
+				this.firstNibble = true;
 				break;
-			case ((int)'v' + Key.AltMask):
+			case 'v' + Key.AltMask:
 			case Key.PageUp:
-				MoveUp (bytesPerLine * Frame.Height);
+				this.MoveUp(this.bytesPerLine * this.Frame.Height);
 				break;
 			case Key.ControlV:
 			case Key.PageDown:
-				MoveDown (bytesPerLine * Frame.Height);
+				this.MoveDown(this.bytesPerLine * this.Frame.Height);
 				break;
 			case Key.Home:
-				DisplayStart = 0;
-				SetNeedsDisplay ();
+				this.DisplayStart = 0;
+				this.SetNeedsDisplay();
 				break;
 			default:
-				if (leftSide) {
+				if (this.leftSide) {
 					int value = -1;
-					var k = (char)keyEvent.Key;
+					var k = (char) keyEvent.Key;
 					if (k >= 'A' && k <= 'F')
 						value = k - 'A' + 10;
 					else if (k >= 'a' && k <= 'f')
@@ -341,50 +367,42 @@ namespace Terminal.Gui {
 						return false;
 
 					byte b;
-					if (!edits.TryGetValue (position, out b)) {
-						source.Position = position;
-						b = (byte)source.ReadByte ();
+					if (!this.edits.TryGetValue(this.position, out b)) {
+						this.source.Position = this.position;
+						b = (byte) this.source.ReadByte();
 					}
-					RedisplayLine (position);
-					if (firstNibble) {
-						firstNibble = false;
-						b = (byte)(b & 0xf | (value << 4));
-						edits [position] = b;
+
+					this.RedisplayLine(this.position);
+					if (this.firstNibble) {
+						this.firstNibble = false;
+						b = (byte) ((b & 0xf) | (value << 4));
+						this.edits[this.position] = b;
 					} else {
-						b = (byte)(b & 0xf0 | value);
-						edits [position] = b;
-						CursorRight ();
+						b = (byte) ((b & 0xf0) | value);
+						this.edits[this.position] = b;
+						this.CursorRight();
 					}
+
 					return true;
 				} else
 					return false;
 			}
-			PositionCursor ();
+
+			this.PositionCursor();
 			return true;
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="T:Terminal.Gui.HexView"/> allow editing of the contents of the underlying stream.
+		///     This method applies the edits to the stream and resets the contents of the Edits property
 		/// </summary>
-		/// <value><c>true</c> if allow edits; otherwise, <c>false</c>.</value>
-		public bool AllowEdits { get; set; }
-
-		/// <summary>
-		/// Gets a list of the edits done to the buffer which is a sorted dictionary with the positions where the edit took place and the value that was set.
-		/// </summary>
-		/// <value>The edits.</value>
-		public IReadOnlyDictionary<long,byte> Edits => edits;
-
-		/// <summary>
-		/// This method applies the edits to the stream and resets the contents of the Edits property
-		/// </summary>
-		public void ApplyEdits ()
+		public void ApplyEdits()
 		{
-			foreach (var kv in edits) {
-				source.Position = kv.Key;
-				source.WriteByte (kv.Value);
+			foreach (var kv in this.edits) {
+				this.source.Position = kv.Key;
+				this.source.WriteByte(kv.Value);
 			}
-			edits = new SortedDictionary<long, byte> ();
+
+			this.edits = new SortedDictionary<long, byte>();
 		}
 	}
 }

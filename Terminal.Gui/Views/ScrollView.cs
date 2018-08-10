@@ -13,96 +13,98 @@
 // - Raise events
 // - Perhaps allow an option to not display the scrollbar arrow indicators?
 
-using System;
 namespace Terminal.Gui {
+	using System;
+
 	/// <summary>
-	/// ScrollBarViews are views that display a 1-character scrollbar, either horizontal or vertical
+	///     ScrollBarViews are views that display a 1-character scrollbar, either horizontal or vertical
 	/// </summary>
 	/// <remarks>
-	/// <para>
-	///   The scrollbar is drawn to be a representation of the Size, assuming that the 
-	///   scroll position is set at Position.
-	/// </para>
-	/// <para>
-	///   If the region to display the scrollbar is larger than three characters, 
-	///   arrow indicators are drawn.
-	/// </para>
+	///     <para>
+	///         The scrollbar is drawn to be a representation of the Size, assuming that the
+	///         scroll position is set at Position.
+	///     </para>
+	///     <para>
+	///         If the region to display the scrollbar is larger than three characters,
+	///         arrow indicators are drawn.
+	///     </para>
 	/// </remarks>
 	public class ScrollBarView : View {
-		bool vertical;
 		int size, position;
 
-		/// <summary>
-		/// The size that this scrollbar represents
-		/// </summary>
-		/// <value>The size.</value>
-		public int Size {
-			get => size;
-			set {
-				size = value;
-				SetNeedsDisplay ();
-			}
-		}
+		readonly bool vertical;
 
 		/// <summary>
-		/// This event is raised when the position on the scrollbar has changed.
-		/// </summary>
-		public event Action ChangedPosition;
-
-		/// <summary>
-		/// The position to show the scrollbar at.
-		/// </summary>
-		/// <value>The position.</value>
-		public int Position {
-			get => position;
-			set {
-				position = value;
-				SetNeedsDisplay ();
-			}
-		}
-
-		void SetPosition (int newPos)
-		{
-			Position = newPos;
-			ChangedPosition?.Invoke ();
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Terminal.Gui.Gui.ScrollBarView"/> class.
+		///     Initializes a new instance of the <see cref="T:Terminal.Gui.Gui.ScrollBarView" /> class.
 		/// </summary>
 		/// <param name="rect">Frame for the scrollbar.</param>
 		/// <param name="size">The size that this scrollbar represents.</param>
 		/// <param name="position">The position within this scrollbar.</param>
 		/// <param name="isVertical">If set to <c>true</c> this is a vertical scrollbar, otherwize, the scrollbar is horizontal.</param>
-		public ScrollBarView (Rect rect, int size, int position, bool isVertical) : base (rect)
+		public ScrollBarView(Rect rect, int size, int position, bool isVertical) : base(rect)
 		{
-			vertical = isVertical;
+			this.vertical = isVertical;
 			this.position = position;
 			this.size = size;
 		}
 
 		/// <summary>
-		/// Redraw the scrollbar
+		///     The size that this scrollbar represents
+		/// </summary>
+		/// <value>The size.</value>
+		public int Size {
+			get => this.size;
+			set {
+				this.size = value;
+				this.SetNeedsDisplay();
+			}
+		}
+
+		/// <summary>
+		///     The position to show the scrollbar at.
+		/// </summary>
+		/// <value>The position.</value>
+		public int Position {
+			get => this.position;
+			set {
+				this.position = value;
+				this.SetNeedsDisplay();
+			}
+		}
+
+		/// <summary>
+		///     This event is raised when the position on the scrollbar has changed.
+		/// </summary>
+		public event Action ChangedPosition;
+
+		void SetPosition(int newPos)
+		{
+			this.Position = newPos;
+			this.ChangedPosition?.Invoke();
+		}
+
+		/// <summary>
+		///     Redraw the scrollbar
 		/// </summary>
 		/// <param name="region">Region to be redrawn.</param>
 		public override void Redraw(Rect region)
 		{
-			Driver.SetAttribute (ColorScheme.Normal);
+			Driver.SetAttribute(this.ColorScheme.Normal);
 
-			if (vertical) {
-				if (region.Right < Bounds.Width - 1)
+			if (this.vertical) {
+				if (region.Right < this.Bounds.Width - 1)
 					return;
 
-				var col = Bounds.Width - 1;
-				var bh = Bounds.Height;
+				int col = this.Bounds.Width - 1;
+				int bh = this.Bounds.Height;
 				Rune special;
 
 				if (bh < 4) {
-					var by1 = position * bh / Size;
-					var by2 = (position + bh) * bh / Size;
+					int by1 = this.position * bh / this.Size;
+					int by2 = (this.position + bh) * bh / this.Size;
 
-					for (int y = 0; y < bh; y++) {
-						Move (col, y);
+					for (var y = 0; y < bh; y++) {
+						this.Move(col, y);
 						if (y < by1 || y > by2)
 							special = Driver.Stipple;
 						else
@@ -111,16 +113,16 @@ namespace Terminal.Gui {
 					}
 				} else {
 					bh -= 2;
-					var by1 = position * bh / Size;
-					var by2 = (position + bh) * bh / Size;
+					int by1 = this.position * bh / this.Size;
+					int by2 = (this.position + bh) * bh / this.Size;
 
-					
-					Move (col, 0);
-					Driver.AddRune ('^');
-					Move (col, Bounds.Height - 1);
-					Driver.AddRune ('v');
-					for (int y = 0; y < bh; y++) {
-						Move (col, y+1);
+
+					this.Move(col, 0);
+					Driver.AddRune('^');
+					this.Move(col, this.Bounds.Height - 1);
+					Driver.AddRune('v');
+					for (var y = 0; y < bh; y++) {
+						this.Move(col, y + 1);
 
 						if (y < by1 || y > by2)
 							special = Driver.Stipple;
@@ -136,42 +138,42 @@ namespace Terminal.Gui {
 									special = Driver.VLine;
 							}
 						}
-						Driver.AddRune (special);
+
+						Driver.AddRune(special);
 					}
 				}
 			} else {
-				if (region.Bottom < Bounds.Height - 1)
+				if (region.Bottom < this.Bounds.Height - 1)
 					return;
 
-				var row = Bounds.Height - 1;
-				var bw = Bounds.Width;
+				int row = this.Bounds.Height - 1;
+				int bw = this.Bounds.Width;
 				Rune special;
 
 				if (bw < 4) {
-					var bx1 = position * bw / Size;
-					var bx2 = (position + bw) * bw / Size;
+					int bx1 = this.position * bw / this.Size;
+					int bx2 = (this.position + bw) * bw / this.Size;
 
-					for (int x = 0; x < bw; x++) {
-						Move (0, x);
+					for (var x = 0; x < bw; x++) {
+						this.Move(0, x);
 						if (x < bx1 || x > bx2)
 							special = Driver.Stipple;
 						else
 							special = Driver.Diamond;
-						Driver.AddRune (special);
+						Driver.AddRune(special);
 					}
 				} else {
 					bw -= 2;
-					var bx1 = position * bw / Size;
-					var bx2 = (position + bw) * bw / Size;
+					int bx1 = this.position * bw / this.Size;
+					int bx2 = (this.position + bw) * bw / this.Size;
 
-					Move (0, row);
-					Driver.AddRune ('<');
+					this.Move(0, row);
+					Driver.AddRune('<');
 
-					for (int x = 0; x < bw; x++) {
-
-						if (x < bx1 || x > bx2) {
+					for (var x = 0; x < bw; x++) {
+						if (x < bx1 || x > bx2)
 							special = Driver.Stipple;
-						} else {
+						else {
 							if (bx2 - bx1 == 0)
 								special = Driver.Diamond;
 							else {
@@ -183,9 +185,11 @@ namespace Terminal.Gui {
 									special = Driver.HLine;
 							}
 						}
-						Driver.AddRune (special);
+
+						Driver.AddRune(special);
 					}
-					Driver.AddRune ('>');
+
+					Driver.AddRune('>');
 				}
 			}
 		}
@@ -195,25 +199,23 @@ namespace Terminal.Gui {
 			if (me.Flags != MouseFlags.Button1Clicked)
 				return false;
 
-			int location = vertical ? me.Y : me.X;
-			int barsize = vertical ? Bounds.Height : Bounds.Width;
+			int location = this.vertical ? me.Y : me.X;
+			int barsize = this.vertical ? this.Bounds.Height : this.Bounds.Width;
 
-			if (barsize < 4) {
-				// Handle scrollbars with no buttons
-				Console.WriteLine ("TODO at ScrollBarView2");
-			} else {
+			if (barsize < 4)
+				Console.WriteLine("TODO at ScrollBarView2");
+			else {
 				barsize -= 2;
 				// Handle scrollbars with arrow buttons
-				var pos = Position;
+				int pos = this.Position;
 				if (location == 0) {
 					if (pos > 0)
-						SetPosition (pos - 1);
-				} else if (location == Bounds.Width - 1){
-					if (pos + 1 + barsize < Size)
-						SetPosition (pos + 1);
-				} else {
-					Console.WriteLine ("TODO at ScrollBarView");
-				}
+						this.SetPosition(pos - 1);
+				} else if (location == this.Bounds.Width - 1) {
+					if (pos + 1 + barsize < this.Size)
+						this.SetPosition(pos + 1);
+				} else
+					Console.WriteLine("TODO at ScrollBarView");
 			}
 
 			return true;
@@ -221,230 +223,230 @@ namespace Terminal.Gui {
 	}
 
 	/// <summary>
-	/// Scrollviews are views that present a window into a virtual space where children views are added.  Similar to the iOS UIScrollView.
+	///     Scrollviews are views that present a window into a virtual space where children views are added.  Similar to the
+	///     iOS UIScrollView.
 	/// </summary>
 	/// <remarks>
-	/// <para>
-	///   The subviews that are added to this scrollview are offset by the
-	///   ContentOffset property.   The view itself is a window into the 
-	///   space represented by the ContentSize.
-	/// </para>
-	/// <para>
-	///   
-	/// </para>
+	///     <para>
+	///         The subviews that are added to this scrollview are offset by the
+	///         ContentOffset property.   The view itself is a window into the
+	///         space represented by the ContentSize.
+	///     </para>
+	///     <para>
+	///     </para>
 	/// </remarks>
 	public class ScrollView : View {
-		View contentView;
-		ScrollBarView vertical, horizontal;
-
-		public ScrollView (Rect frame) : base (frame)
-		{
-			contentView = new View (frame);
-			vertical = new ScrollBarView (new Rect (frame.Width - 1, 0, 1, frame.Height), frame.Height, 0, isVertical: true);
-			vertical.ChangedPosition += delegate {
-				ContentOffset = new Point (ContentOffset.X, vertical.Position);
-			};
-			horizontal = new ScrollBarView (new Rect (0, frame.Height-1, frame.Width-1, 1), frame.Width-1, 0, isVertical: false);
-			horizontal.ChangedPosition += delegate {
-				ContentOffset = new Point (horizontal.Position, ContentOffset.Y);
-			};
-			base.Add (contentView);
-			CanFocus = true;
-		}
+		Point contentOffset;
 
 		Size contentSize;
-		Point contentOffset;
+
+		readonly View contentView;
+
 		bool showHorizontalScrollIndicator;
+
 		bool showVerticalScrollIndicator;
 
+		readonly ScrollBarView vertical;
+
+		readonly ScrollBarView horizontal;
+
+		public ScrollView(Rect frame) : base(frame)
+		{
+			this.contentView = new View(frame);
+			this.vertical = new ScrollBarView(new Rect(frame.Width - 1, 0, 1, frame.Height), frame.Height, 0, true);
+			this.vertical.ChangedPosition += delegate { this.ContentOffset = new Point(this.ContentOffset.X, this.vertical.Position); };
+			this.horizontal = new ScrollBarView(new Rect(0, frame.Height - 1, frame.Width - 1, 1), frame.Width - 1, 0, false);
+			this.horizontal.ChangedPosition += delegate { this.ContentOffset = new Point(this.horizontal.Position, this.ContentOffset.Y); };
+			base.Add(this.contentView);
+			this.CanFocus = true;
+		}
+
 		/// <summary>
-		/// Represents the contents of the data shown inside the scrolview
+		///     Represents the contents of the data shown inside the scrolview
 		/// </summary>
 		/// <value>The size of the content.</value>
 		public Size ContentSize {
-			get {
-				return contentSize;
-			}
+			get => this.contentSize;
 			set {
-				contentSize = value;
-				contentView.Frame = new Rect (contentOffset, value);
-				vertical.Size = contentSize.Height;
-				horizontal.Size = contentSize.Width;
-				SetNeedsDisplay ();
+				this.contentSize = value;
+				this.contentView.Frame = new Rect(this.contentOffset, value);
+				this.vertical.Size = this.contentSize.Height;
+				this.horizontal.Size = this.contentSize.Width;
+				this.SetNeedsDisplay();
 			}
 		}
 
 		/// <summary>
-		/// Represents the top left corner coordinate that is displayed by the scrollview
+		///     Represents the top left corner coordinate that is displayed by the scrollview
 		/// </summary>
 		/// <value>The content offset.</value>
 		public Point ContentOffset {
-			get {
-				return contentOffset;
-			}
+			get => this.contentOffset;
 			set {
-				contentOffset = new Point (-Math.Abs (value.X), -Math.Abs(value.Y));
-				contentView.Frame = new Rect (contentOffset, contentSize);
-				vertical.Position = Math.Max (0, -contentOffset.Y);
-				horizontal.Position = Math.Max (0, -contentOffset.X);
-				SetNeedsDisplay ();
+				this.contentOffset = new Point(-Math.Abs(value.X), -Math.Abs(value.Y));
+				this.contentView.Frame = new Rect(this.contentOffset, this.contentSize);
+				this.vertical.Position = Math.Max(0, -this.contentOffset.Y);
+				this.horizontal.Position = Math.Max(0, -this.contentOffset.X);
+				this.SetNeedsDisplay();
 			}
 		}
 
 		/// <summary>
-		/// Adds the view to the scrollview.
-		/// </summary>
-		/// <param name="view">The view to add to the scrollview.</param>
-		public override void Add (View view)
-		{
-			contentView.Add (view);
-		}
-
-		/// <summary>
-		/// Gets or sets the visibility for the horizontal scroll indicator.
+		///     Gets or sets the visibility for the horizontal scroll indicator.
 		/// </summary>
 		/// <value><c>true</c> if show vertical scroll indicator; otherwise, <c>false</c>.</value>
 		public bool ShowHorizontalScrollIndicator {
-			get => showHorizontalScrollIndicator;
+			get => this.showHorizontalScrollIndicator;
 			set {
-				if (value == showHorizontalScrollIndicator)
+				if (value == this.showHorizontalScrollIndicator)
 					return;
-				
-				showHorizontalScrollIndicator = value;
-				SetNeedsDisplay ();
+
+				this.showHorizontalScrollIndicator = value;
+				this.SetNeedsDisplay();
 				if (value)
-					base.Add (horizontal);
+					base.Add(this.horizontal);
 				else
-					Remove (horizontal);
+					this.Remove(this.horizontal);
 			}
 		}
 
 
 		/// <summary>
-		/// /// Gets or sets the visibility for the vertical scroll indicator.
+		///     /// Gets or sets the visibility for the vertical scroll indicator.
 		/// </summary>
 		/// <value><c>true</c> if show vertical scroll indicator; otherwise, <c>false</c>.</value>
 		public bool ShowVerticalScrollIndicator {
-			get => showVerticalScrollIndicator;
+			get => this.showVerticalScrollIndicator;
 			set {
-				if (value == showVerticalScrollIndicator)
+				if (value == this.showVerticalScrollIndicator)
 					return;
-				
-				showVerticalScrollIndicator = value;
-				SetNeedsDisplay ();
+
+				this.showVerticalScrollIndicator = value;
+				this.SetNeedsDisplay();
 				if (value)
-					base.Add (vertical);
+					base.Add(this.vertical);
 				else
-					Remove (vertical);
+					this.Remove(this.vertical);
 			}
 		}
 
 		/// <summary>
-		/// This event is raised when the contents have scrolled
+		///     Adds the view to the scrollview.
+		/// </summary>
+		/// <param name="view">The view to add to the scrollview.</param>
+		public override void Add(View view)
+		{
+			this.contentView.Add(view);
+		}
+
+		/// <summary>
+		///     This event is raised when the contents have scrolled
 		/// </summary>
 		public event Action<ScrollView> Scrolled;
 
 		public override void Redraw(Rect region)
 		{
-			var oldClip = ClipToBounds ();
-			Driver.SetAttribute (ColorScheme.Normal);
-			Clear ();
+			var oldClip = this.ClipToBounds();
+			Driver.SetAttribute(this.ColorScheme.Normal);
+			this.Clear();
 			base.Redraw(region);
 			Driver.Clip = oldClip;
-			Driver.SetAttribute (ColorScheme.Normal);
+			Driver.SetAttribute(this.ColorScheme.Normal);
 		}
 
 		public override void PositionCursor()
 		{
-			if (Subviews.Count == 0)
-				Driver.Move (0, 0);
+			if (this.Subviews.Count == 0)
+				Driver.Move(0, 0);
 			else
-				base.PositionCursor ();
+				base.PositionCursor();
 		}
 
 		/// <summary>
-		/// Scrolls the view up.
+		///     Scrolls the view up.
 		/// </summary>
 		/// <returns><c>true</c>, if left was scrolled, <c>false</c> otherwise.</returns>
 		/// <param name="lines">Number of lines to scroll.</param>
-		public bool ScrollUp (int lines)
+		public bool ScrollUp(int lines)
 		{
-			if (contentOffset.Y < 0) {
-				ContentOffset = new Point (contentOffset.X, Math.Min (contentOffset.Y + lines, 0));
+			if (this.contentOffset.Y < 0) {
+				this.ContentOffset = new Point(this.contentOffset.X, Math.Min(this.contentOffset.Y + lines, 0));
 				return true;
 			}
+
 			return false;
 		}
 
 		/// <summary>
-		/// Scrolls the view to the left
+		///     Scrolls the view to the left
 		/// </summary>
 		/// <returns><c>true</c>, if left was scrolled, <c>false</c> otherwise.</returns>
 		/// <param name="cols">Number of columns to scroll by.</param>
-		public bool ScrollLeft (int cols)
+		public bool ScrollLeft(int cols)
 		{
-			if (contentOffset.X < 0) {
-				ContentOffset = new Point (Math.Min (contentOffset.X + cols, 0), contentOffset.Y);
+			if (this.contentOffset.X < 0) {
+				this.ContentOffset = new Point(Math.Min(this.contentOffset.X + cols, 0), this.contentOffset.Y);
 				return true;
 			}
+
 			return false;
 		}
 
 		/// <summary>
-		/// Scrolls the view down.
+		///     Scrolls the view down.
 		/// </summary>
 		/// <returns><c>true</c>, if left was scrolled, <c>false</c> otherwise.</returns>
 		/// <param name="lines">Number of lines to scroll.</param>
-		public bool ScrollDown (int lines)
+		public bool ScrollDown(int lines)
 		{
-			var ny = Math.Max (-contentSize.Height, contentOffset.Y - lines);
-			if (ny == contentOffset.Y)
+			int ny = Math.Max(-this.contentSize.Height, this.contentOffset.Y - lines);
+			if (ny == this.contentOffset.Y)
 				return false;
-			ContentOffset = new Point (contentOffset.X, ny);
+			this.ContentOffset = new Point(this.contentOffset.X, ny);
 			return true;
 		}
 
 		/// <summary>
-		/// Scrolls the view to the right.
+		///     Scrolls the view to the right.
 		/// </summary>
 		/// <returns><c>true</c>, if right was scrolled, <c>false</c> otherwise.</returns>
 		/// <param name="cols">Number of columns to scroll by.</param>
-		public bool ScrollRight (int cols)
+		public bool ScrollRight(int cols)
 		{
-			var nx = Math.Max (-contentSize.Width, contentOffset.X - cols);
-			if (nx == contentOffset.X)
+			int nx = Math.Max(-this.contentSize.Width, this.contentOffset.X - cols);
+			if (nx == this.contentOffset.X)
 				return false;
-			
-			ContentOffset = new Point (nx, contentOffset.Y);
+
+			this.ContentOffset = new Point(nx, this.contentOffset.Y);
 			return true;
 		}
 
 		public override bool ProcessKey(KeyEvent kb)
 		{
-			if (base.ProcessKey (kb))
+			if (base.ProcessKey(kb))
 				return true;
 
 			switch (kb.Key) {
 			case Key.CursorUp:
-				return ScrollUp (1);
+				return this.ScrollUp(1);
 			case (Key) 'v' | Key.AltMask:
 			case Key.PageUp:
-				return ScrollUp (Bounds.Height);
+				return this.ScrollUp(this.Bounds.Height);
 
 			case Key.ControlV:
 			case Key.PageDown:
-				return ScrollDown (Bounds.Height);
+				return this.ScrollDown(this.Bounds.Height);
 
 			case Key.CursorDown:
-				return ScrollDown (1);
+				return this.ScrollDown(1);
 
 			case Key.CursorLeft:
-				return ScrollLeft (1);
+				return this.ScrollLeft(1);
 
 			case Key.CursorRight:
-				return ScrollRight (1);
-
+				return this.ScrollRight(1);
 			}
+
 			return false;
 		}
 	}
